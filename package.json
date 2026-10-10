@@ -1,0 +1,21 @@
+{
+  "name": "mollah-pro-zone",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mollah Pro Zone - Real Windows VPN/Proxy Client",
+  "main": "src/server.mjs",
+  "bin": {
+    "mollah": "src/cli.mjs"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "cli": "node src/cli.mjs",
+    "test": "node test/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "Mollah Pro Zone",
+  "license": "UNLICENSED"
+}

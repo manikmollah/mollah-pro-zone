@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mollah Pro Zone — Real VPN</title>
+    <link rel="icon" href="/assets/logo-256.png" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body class="theme-dark">
+    <div class="bg-orbs" aria-hidden="true">
+      <span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span>
+    </div>
+
+    <div class="app">
+      <!-- ================= SIDEBAR ================= -->
+      <aside class="sidebar">
+        <div class="brand">
+          <img src="/assets/logo-256.png" alt="Mollah Pro Zone" class="brand-logo" />
+          <div class="brand-text">
+            <strong>Mollah <span>Pro Zone</span></strong>
+            <small id="brandTag">Real Tunnel · Real Privacy</small>
+          </div>
+        </div>
+
+        <nav class="nav" id="nav">
+          <button class="nav-item is-active" data-view="home"><i class="ic ic-shield"></i><span>Home</span></button>
+          <button class="nav-item" data-view="servers"><i class="ic ic-globe"></i><span>Servers</span><em id="navServerCount" class="pill">—</em></button>
+          <button class="nav-item" data-view="stats"><i class="ic ic-chart"></i><span>Statistics</span></button>
+          <button class="nav-item" data-view="security"><i class="ic ic-lock"></i><span>Security</span></button>
+          <button class="nav-item" data-view="stealth"><i class="ic ic-eye"></i><span>Stealth</span></button>
+          <button class="nav-item" data-view="settings"><i class="ic ic-gear"></i><span>Settings</span></button>
+          <button class="nav-item" data-view="logs"><i class="ic ic-term"></i><span>Live Log</span></button>
+          <button class="nav-item" data-view="about"><i class="ic ic-user"></i><span>About</span></button>
+        </nav>
+
+        <div class="side-foot">
+          <div class="mini-card" id="sideIpCard">
+            <span class="mini-label">Your public IP</span>
+            <strong id="sideIp">—</strong>
+            <span class="mini-sub" id="sideIpSub">not checked</span>
+          </div>
+          <div class="mini-card" id="sideGeoCard">
+            <span class="mini-label">Device appears as</span>
+            <strong id="sideGeo">—</strong>
+            <span class="mini-sub" id="sideGeoSub">not connected</span>
+          </div>
+          <div class="ver">v1.0.0 · free pool</div>
+        </div>
+      </aside>
+
+      <!-- ================= MAIN ================= -->
+      <main class="main">
+        <header class="topbar">
+          <div class="tb-left">
+            <h1 id="viewTitle">Home</h1>
+            <p id="viewSub">Free high-speed servers, hard-tunnelled through a local engine.</p>
+          </div>
+          <div class="tb-right">
+            <div class="status-chip" id="stateChip"><span class="dot"></span><span id="stateText">Idle</span></div>
+            <button class="icon-btn" id="btnQuick" title="Quick connect (fastest)"><i class="ic ic-bolt"></i></button>
+            <button class="icon-btn" id="btnRefresh" title="Refresh server list"><i class="ic ic-refresh"></i></button>
+          </div>
+        </header>
+
+        <div class="views">
+          <!-- ---------- HOME ---------- -->
+          <section class="view is-active" data-view="home">
+            <div class="home-grid">
+              <div class="card hero">
+                <div class="shield-wrap">
+                  <div class="shield-ring ring-3"></div>
+                  <div class="shield-ring ring-2"></div>
+                  <div class="shield-ring ring-1"></div>
+                  <button class="power" id="powerBtn" aria-label="Connect">
+                    <svg viewBox="0 0 24 24" class="power-ic"><path d="M12 3v9" /><path d="M6.6 6.6a8 8 0 1 0 10.8 0" /></svg>
+                  </button>
+                </div>
+                <h2 class="hero-state" id="heroState">Not connected</h2>
+                <p class="hero-sub" id="heroSub">তোমার আসল IP লুকিয়ে রাখো — এক ক্লিকে</p>
+
+                <div class="ip-row">
+                  <div class="ip-box">
+                    <span>Direct IP</span>
+                    <strong id="ipDirect">—</strong>
+                  </div>
+                  <i class="ic ic-arrow"></i>
+                  <div class="ip-box accent">
+                    <span>VPN IP</span>
+                    <strong id="ipEgress">—</strong>
+                  </div>
+                </div>
+
+                <div class="location-pick" id="quickLocations"></div>
+
+                <div class="hero-actions">
+                  <button class="btn btn-primary" id="btnConnect">Connect</button>
+                  <button class="btn btn-ghost" id="btnAuto">Auto (Fastest)</button>
+                </div>
+              </div>
+
+              <div class="side-col">
+                <div class="card stat-card">
+                  <div class="sc-head"><i class="ic ic-globe"></i><span>Connected location</span></div>
+                  <div class="sc-body">
+                    <img id="flagBig" class="flag-big" alt="" />
+                    <div>
+                      <strong id="curCountry">—</strong>
+                      <small id="curHost">no server selected</small>
+                    </div>
+                  </div>
+                  <div class="sc-meta">
+                    <span>Latency <b id="curLatency">—</b></span>
+                    <span>Uptime <b id="curUptime">—</b></span>
+                  </div>
+                </div>
+
+                <div class="card stat-card">
+                  <div class="sc-head"><i class="ic ic-swap"></i><span>Live throughput</span></div>
+                  <canvas id="spark" class="spark" width="600" height="130"></canvas>
+                  <div class="sc-meta">
+                    <span>↓ <b id="rateDown">0 KB/s</b></span>
+                    <span>↑ <b id="rateUp">0 KB/s</b></span>
+                  </div>
+                  <div class="sc-meta">
+                    <span>Session <b id="sessTotal">0 B</b></span>
+                    <span>Conns <b id="sessConns">0</b></span>
+                  </div>
+                </div>
+
+                <div class="card stat-card">
+                  <div class="sc-head"><i class="ic ic-bolt"></i><span>Protection</span></div>
+                  <ul class="checklist" id="homeChecks"></ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ---------- SERVERS ---------- -->
+          <section class="view" data-view="servers">
+            <div class="srv-toolbar card">
+              <div class="search-wrap">
+                <i class="ic ic-search"></i>
+                <input id="srvSearch" type="search" placeholder="Search country, code or IP… (e.g. Germany, DE, 5.42)" />
+              </div>
+              <label class="toggle"><input type="checkbox" id="srvTestedOnly" /><span></span>Tested only</label>
+              <label class="toggle"><input type="checkbox" id="srvFavOnly" /><span></span>Favourites</label>
+              <button class="btn btn-sm btn-primary" id="btnProbeAll"><i class="ic ic-bolt"></i> Test all latency</button>
+              <button class="btn btn-sm btn-ghost" id="btnProbeCancel">Stop</button>
+            </div>
+
+            <div class="probe-bar card" id="probeBar" hidden>
+              <div class="pb-label"><span id="probeText">Testing…</span><b id="probePct">0%</b></div>
+              <div class="pb-track"><div class="pb-fill" id="probeFill"></div></div>
+            </div>
+
+            <div class="srv-layout">
+              <div class="card srv-countries">
+                <div class="card-head"><h3>Countries</h3><span class="pill" id="ccCount">—</span></div>
+                <div class="cc-list" id="ccList"></div>
+              </div>
+              <div class="card srv-table-wrap">
+                <div class="card-head">
+                  <h3>Servers</h3>
+                  <span class="pill" id="srvCount">—</span>
+                  <span class="grow"></span>
+                  <label class="toggle sm"><input type="checkbox" id="srvAutoOnConnect" /><span></span>auto-connect best</label>
+                </div>
+                <div class="table-scroll">
+                  <table class="srv-table">
+                    <thead>
+                      <tr>
+                        <th class="col-fav"></th>
+                        <th>Country</th>
+                        <th>Endpoint</th>
+                        <th class="col-lat">Latency</th>
+                        <th class="col-act"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="srvBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ---------- STATS ---------- -->
+          <section class="view" data-view="stats">
+            <div class="cards-row">
+              <div class="card kpi"><span>Servers</span><strong id="kpiServers">—</strong><small id="kpiServersSub">in pool</small></div>
+              <div class="card kpi"><span>Countries</span><strong id="kpiCountries">—</strong><small>available now</small></div>
+              <div class="card kpi"><span>Best latency</span><strong id="kpiBest">—</strong><small>measured</small></div>
+              <div class="card kpi"><span>Sessions</span><strong id="kpiSessions">—</strong><small>lifetime</small></div>
+            </div>
+            <div class="cards-row">
+              <div class="card"><div class="card-head"><h3>Data transferred (session)</h3></div>
+                <canvas id="chartData" class="spark tall" width="900" height="240"></canvas>
+                <div class="sc-meta"><span>Downloaded <b id="dataDown">0 B</b></span><span>Uploaded <b id="dataUp">0 B</b></span><span>Lifetime <b id="dataLife">0 B</b></span></div>
+              </div>
+            </div>
+            <div class="cards-row">
+              <div class="card"><div class="card-head"><h3>Latency by country (best of each)</h3></div><div class="bar-list" id="latencyBars"></div></div>
+              <div class="card"><div class="card-head"><h3>Recent connections</h3></div><div class="list" id="recentList"></div></div>
+            </div>
+          </section>
+
+          <!-- ---------- SECURITY ---------- -->
+          <section class="view" data-view="security">
+            <div class="cards-row">
+              <div class="card">
+                <div class="card-head"><h3>Leak &amp; integrity tests</h3><span class="grow"></span><button class="btn btn-sm btn-primary" id="btnLeak"><i class="ic ic-shield"></i> Run tests</button></div>
+                <ul class="checklist big" id="leakList"><li class="muted">Run the tests to inspect your tunnel.</li></ul>
+              </div>
+              <div class="card">
+                <div class="card-head"><h3>Protection controls</h3></div>
+                <div class="setting"><div><b>Kill switch</b><small>Windows Firewall blocks all traffic except the active server (needs admin)</small></div><label class="switch"><input type="checkbox" id="setKillSwitch" /><span></span></label></div>
+                <div class="setting"><div><b>WebRTC guard</b><small>Advisory flag for browsers — blocks IP leaks over WebRTC</small></div><label class="switch"><input type="checkbox" id="setWebRtc" /><span></span></label></div>
+                <div class="setting"><div><b>Auto failover</b><small>Switch server automatically when the tunnel dies</small></div><label class="switch"><input type="checkbox" id="setFailover" /><span></span></label></div>
+                <div class="setting"><div><b>Split tunnel exclusions</b><small>Domains that bypass the VPN (comma separated)</small></div></div>
+                <textarea id="setSplit" class="textarea" rows="3" placeholder="bank.com, 10.0.0.0/8, intranet.local"></textarea>
+                <div class="row-end"><button class="btn btn-sm btn-primary" id="btnSaveSplit">Save exclusions</button>
+                <button class="btn btn-sm btn-ghost" id="btnFlushDns">Flush DNS</button></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>System integration</h3><span class="grow"></span><span class="pill" id="sysProxyPill">—</span></div>
+              <div class="sys-grid" id="sysGrid"></div>
+              <div class="row-end">
+                <button class="btn btn-sm btn-primary" id="btnSysOn">Apply system proxy</button>
+                <button class="btn btn-sm btn-ghost" id="btnSysOff">Turn system proxy off</button>
+                <button class="btn btn-sm btn-ghost" id="btnNetInfo">Network info</button>
+              </div>
+              <pre class="pre" id="netInfo" hidden></pre>
+            </div>
+          </section>
+
+          <!-- ---------- STEALTH ---------- -->
+          <section class="view" data-view="stealth">
+            <div class="cards-row">
+              <div class="card stealth-score">
+                <div class="card-head"><h3>Detection resistance</h3><span class="grow"></span><span class="pill" id="stealthPill">—</span></div>
+                <div class="score-ring-wrap">
+                  <svg viewBox="0 0 120 120" class="score-ring">
+                    <circle cx="60" cy="60" r="52" class="ring-bg" />
+                    <circle cx="60" cy="60" r="52" class="ring-fg" id="scoreRing" />
+                  </svg>
+                  <div class="score-num"><strong id="stealthScore">—</strong><small>/ 100</small></div>
+                </div>
+                <p class="muted small" id="stealthVerdict">Connect to measure your exposure.</p>
+                <button class="btn btn-sm btn-primary" id="btnStealthRun"><i class="ic ic-eye"></i> Run detection audit</button>
+              </div>
+
+              <div class="card">
+                <div class="card-head"><h3>Device identity</h3></div>
+                <ul class="kv" id="identityKv"></ul>
+                <p class="muted small">These are the values websites read to guess where you are.</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Anti-detection checks</h3><span class="grow"></span><span class="pill" id="stealthChecked">—</span></div>
+              <ul class="checklist big" id="stealthList">
+                <li class="muted">Run the audit to inspect every layer.</li>
+              </ul>
+            </div>
+
+            <div class="cards-row">
+              <div class="card">
+                <div class="card-head"><h3>Hardening controls</h3></div>
+                <div class="setting"><div><b>Match desktop timezone</b><small>Switch the Windows clock to the exit country on connect, and restore it on disconnect</small></div><label class="switch"><input type="checkbox" id="setSyncTz" /><span></span></label></div>
+                <div class="setting"><div><b>Force en-US browser locale</b><small>App window reports English (US) instead of your system language</small></div><label class="switch"><input type="checkbox" id="setNeutralLocale" /><span></span></label></div>
+                <div class="setting"><div><b>WebRTC leak guard</b><small>Blocks non-proxied UDP so WebRTC cannot reveal your real IP</small></div><label class="switch"><input type="checkbox" id="setWebRtc2" /><span></span></label></div>
+                <div class="setting"><div><b>Verify IP on connect</b><small>Refuse to report “protected” unless the egress IP really changed</small></div><label class="switch"><input type="checkbox" id="setHideIp2" /><span></span></label></div>
+              </div>
+              <div class="card">
+                <div class="card-head"><h3>What cannot be hidden</h3></div>
+                <p class="muted small" style="line-height:1.7">
+                  Honesty matters more than marketing here. A proxy-based VPN changes your
+                  <b>IP address</b>, your <b>device timezone</b> and your <b>WebRTC exposure</b>.
+                  It cannot change:
+                </p>
+                <ul class="checklist" style="margin-top:12px">
+                  <li class="muted">The fact that the exit node is a <b>hosting/datacenter</b> IP — some sites flag those regardless of country</li>
+                  <li class="muted">Your <b>DNS resolver</b> — queries still leave through your configured DNS</li>
+                  <li class="muted">Whether this specific free server is already on a public blocklist</li>
+                  <li class="muted">Login history, cookies or accounts that already know you</li>
+                </ul>
+                <p class="muted small" style="margin-top:12px">
+                  Tip: to look consistent, also set your browser language, and prefer normal
+                  HTTPS browsing over sites that require a phone number.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ---------- SETTINGS ---------- -->
+          <section class="view" data-view="settings">
+            <div class="cards-row">
+              <div class="card">
+                <div class="card-head"><h3>Connection</h3></div>
+                <div class="setting"><div><b>Routing mode</b><small>How traffic is captured</small></div>
+                  <select id="setProtocol" class="select">
+                    <option value="system">System-wide proxy (recommended)</option>
+                    <option value="pac">PAC / split-tunnel</option>
+                    <option value="gateway">Local gateway only (127.0.0.1)</option>
+                  </select>
+                </div>
+                <div class="setting"><div><b>Selection mode</b><small>How the server is chosen</small></div>
+                  <select id="setMode" class="select">
+                    <option value="smart">Smart — probe then pick fastest</option>
+                    <option value="fastest">Fastest known</option>
+                    <option value="specific">Always ask me</option>
+                  </select>
+                </div>
+                <div class="setting"><div><b>Max acceptable latency</b><small>Servers slower than this are skipped</small></div>
+                  <div class="range-wrap"><input type="range" id="setMaxLat" min="300" max="5000" step="100" /><b id="setMaxLatVal">3000 ms</b></div>
+                </div>
+                <div class="setting"><div><b>Probe on start</b><small>Measure latency automatically at launch</small></div><label class="switch"><input type="checkbox" id="setProbeStart" /><span></span></label></div>
+                <div class="setting"><div><b>Verify IP on connect</b><small>Confirm the tunnel really changes your IP</small></div><label class="switch"><input type="checkbox" id="setHideIp" /><span></span></label></div>
+                <div class="setting"><div><b>Connect on launch</b><small>Auto-connect using the saved location</small></div><label class="switch"><input type="checkbox" id="setConnectLaunch" /><span></span></label></div>
+              </div>
+
+              <div class="card">
+                <div class="card-head"><h3>Application</h3></div>
+                <div class="setting"><div><b>Launch on Windows startup</b><small>Start minimised with Windows</small></div><label class="switch"><input type="checkbox" id="setStartup" /><span></span></label></div>
+                <div class="setting"><div><b>Notifications</b><small>Show toast when state changes</small></div><label class="switch"><input type="checkbox" id="setNotify" /><span></span></label></div>
+                <div class="setting"><div><b>Theme</b><small>Interface appearance</small></div>
+                  <select id="setTheme" class="select"><option value="dark">Dark</option><option value="light">Light</option></select>
+                </div>
+                <div class="setting"><div><b>Accent</b><small>Highlight colour</small></div>
+                  <div class="accents" id="accents">
+                    <button class="acc is-active" data-accent="violet" style="--a:#8b5cf6"></button>
+                    <button class="acc" data-accent="cyan" style="--a:#06b6d4"></button>
+                    <button class="acc" data-accent="emerald" style="--a:#10b981"></button>
+                    <button class="acc" data-accent="amber" style="--a:#f59e0b"></button>
+                    <button class="acc" data-accent="rose" style="--a:#f43f5e"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cards-row">
+              <div class="card">
+                <div class="card-head"><h3>Engine endpoints</h3></div>
+                <ul class="kv" id="engineKv"></ul>
+                <div class="row-end">
+                  <button class="btn btn-sm btn-ghost" id="btnCopyProxy">Copy proxy address</button>
+                  <button class="btn btn-sm btn-ghost" id="btnCopyPac">Copy PAC URL</button>
+                  <button class="btn btn-sm btn-ghost" id="btnOpenPac">Open PAC</button>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-head"><h3>Danger zone</h3></div>
+                <p class="muted small">Disconnecting restores your original Windows proxy settings. The kill switch is removed on disconnect.</p>
+                <div class="row-end">
+                  <button class="btn btn-sm btn-danger" id="btnResetProxy">Restore Windows proxy now</button>
+                  <button class="btn btn-sm btn-danger" id="btnDisableKs">Disable kill switch</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ---------- LOGS ---------- -->
+          <section class="view" data-view="logs">
+            <div class="cards-row">
+              <div class="card">
+                <div class="card-head"><h3>Application log</h3><span class="grow"></span><button class="btn btn-sm btn-ghost" id="btnClearLog">Clear</button></div>
+                <div class="log" id="appLog"></div>
+              </div>
+              <div class="card">
+                <div class="card-head"><h3>Proxy activity</h3><span class="pill" id="connCount">0</span></div>
+                <div class="log" id="connLog"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ---------- ABOUT ---------- -->
+          <section class="view" data-view="about">
+            <div class="about-hero card">
+              <img src="/assets/logo-256.png" alt="" class="about-logo" />
+              <div>
+                <h2>Mollah Pro Zone</h2>
+                <p class="muted">Real Tunnel. Real Speed. Real Privacy.</p>
+                <p class="muted small">Version 1.0.0 · free server pool · 84 countries</p>
+              </div>
+            </div>
+
+            <div class="cards-row" style="margin-top:18px">
+              <div class="card">
+                <div class="card-head"><h3>Developer</h3><span class="pill">Creator</span></div>
+                <div class="dev-card">
+                  <div class="dev-avatar">MM</div>
+                  <div class="dev-info">
+                    <strong>Md. Manik Hossain Mollah</strong>
+                    <small>মোঃ মানিক হোসেন মোল্লা</small>
+                    <span class="dev-role">Full-Stack Developer &amp; Security Enthusiast</span>
+                  </div>
+                </div>
+                <ul class="kv" style="margin-top:16px">
+                  <li><span>Contact</span><b><a href="https://www.facebook.com/share/18ceMbc9uW/" target="_blank" rel="noreferrer" class="link">facebook.com/share/18ceMbc9uW</a></b></li>
+                  <li><span>Project</span><b>Mollah Pro Zone</b></li>
+                  <li><span>Built with</span><b>Node.js · C# · Windows API</b></li>
+                </ul>
+                <div class="row-end">
+                  <button class="btn btn-sm btn-primary" id="btnContact">Open Facebook profile</button>
+                  <button class="btn btn-sm btn-ghost" id="btnCopyContact">Copy link</button>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head"><h3>Credits &amp; technology</h3></div>
+                <ul class="checklist big">
+                  <li class="ok"><b>Mollah Pro Zone engine</b> <small>custom proxy core, SOCKS5 + HTTP CONNECT + PAC</small></li>
+                  <li class="ok"><b>Designed &amp; developed by Md. Manik Hossain Mollah</b> <small>architecture, UI, security hardening</small></li>
+                  <li class="ok"><b>Server pool</b> <small>free-tier endpoints of the upstream provider</small></li>
+                  <li class="ok"><b>Runtime</b> <small>Node.js, bundled — nothing else to install</small></li>
+                </ul>
+                <p class="muted small" style="margin-top:14px">
+                  This application is a personal project. The server pool belongs to its
+                  respective provider and is used here under its free tier.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+    <div class="modal" id="modal" hidden>
+      <div class="modal-box">
+        <h3 id="modalTitle">Title</h3>
+        <p id="modalBody"></p>
+        <div class="modal-actions"><button class="btn btn-primary" id="modalOk">OK</button></div>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
